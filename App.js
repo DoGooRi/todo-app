@@ -66,7 +66,7 @@ export default class App extends React.Component {
       console.log(toDos);
       this.setState({
         loadedToDos: true,
-        toDos: JSON.parse(toDos)
+        toDos: JSON.parse(toDos) || {}
       })
     } catch (err) {
       console.log(err)
