@@ -39,7 +39,7 @@ export default class App extends React.Component {
             onSubmitEditing={this._addToDo}
           />
           <ScrollView contentContainerStyle={styles.toDos}>
-            {Object.values(toDos).map(toDo =>
+            {Object.values(toDos).reverse().map(toDo =>
               <ToDo
                 key={toDo.id}
                 {...toDo} // props 패싱
@@ -60,10 +60,17 @@ export default class App extends React.Component {
     })
   }
 
-  _loadToDos = () => {
-    this.setState({
-      loadedToDos: true
-    })
+  _loadToDos = async () => {
+    try {
+      const toDos = await AsyncStorage.getItem("toDos");
+      console.log(toDos);
+      this.setState({
+        loadedToDos: true,
+        toDos: JSON.parse(toDos)
+      })
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   _addToDo = () => {
@@ -129,7 +136,7 @@ export default class App extends React.Component {
         ...prevState,
         toDos: {
           ...prevState.toDos,
-          [id]: { ...prevState.toDos[id], isCompleted: true}
+          [id]: { ...prevState.toDos[id], isCompleted: true }
         }
       };
       this._saveToDos(newState.toDos);
@@ -143,7 +150,7 @@ export default class App extends React.Component {
         ...prevState,
         toDos: {
           ...prevState.toDos,
-          [id]: { ...prevState.toDos[id], text: text}
+          [id]: { ...prevState.toDos[id], text: text }
         }
       };
       this._saveToDos(newState.toDos);
